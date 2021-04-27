@@ -6,6 +6,7 @@ namespace Application
         public TestClass()
         {
           Console.WriteLine("Hallo meine Freunde :)");
+            Console.ReadKey();
         }
     }
 }
