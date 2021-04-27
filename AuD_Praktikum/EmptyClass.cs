@@ -1,12 +1,11 @@
 ﻿using System;
 namespace Application
 {
-    public class EmptyClass
+    public class TestClass
     {
-        public EmptyClass()
+        public TestClass()
         {
             print('BYYE');
-            Worked?
         }
     }
 }
