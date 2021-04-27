@@ -6,6 +6,7 @@ namespace Application
         public EmptyClass()
         {
             print('BYYE');
+            Worked?
         }
     }
 }
