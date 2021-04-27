@@ -5,7 +5,7 @@ namespace Application
     {
         public TestClass()
         {
-            print('Hello, funktioniert!');
+          
         }
     }
 }
