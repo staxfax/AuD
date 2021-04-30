@@ -44,7 +44,7 @@ namespace AuD_Praktikum
             if (abstractChoice == 4 && (concreteChoice == 3 || concreteChoice == 4))
                 concreteChoice = concreteChoice + 2;
 
-            string typeName = "algodat_main."; //muss an projektmappennamen angepasst werden!
+            string typeName = "AuD_Praktikum."; //muss an projektmappennamen angepasst werden!
             if (concreteChoice < 3)
                 typeName += (abstractChoiceName)abstractChoice;
             typeName += (concreteChoiceName)concreteChoice;
@@ -72,14 +72,23 @@ namespace AuD_Praktikum
                     "\n print gibt den gesamten Datentyp aus." +
                     "\n\n (exit beendet das Programm)" +
                     "\n\nZur besseren Veranschaulichung wird der gesamte Datentyp nach jedem Aufruf der Einfügen- und Löschen-Funktionen ausgegeben.\n\n\n\n");
+                item.print();
                 string input = Console.ReadLine();
                 string[] inputSplit = input.Split(':');
                 switch (inputSplit[0])
                 {
-                    case "insert": { item.insert(Convert.ToInt32(inputSplit[1])); item.print(); break; }
-                    case "search": { item.search(Convert.ToInt32(inputSplit[1])); item.print(); break; }
-                    case "delete": { item.delete(Convert.ToInt32(inputSplit[1])); item.print(); break; }
-                    case "print": { item.print(); break; }
+                    case "insert": { item.insert(Convert.ToInt32(inputSplit[1])); Console.WriteLine(); item.print(); break; }
+                    case "search":
+                        {
+                            bool found = item.search(Convert.ToInt32(inputSplit[1]));
+                            if (found)
+                                Console.Write("\nDas Objekt " + inputSplit[1] + " wurde gefunden.\n");
+                            else
+                                Console.Write("\nDas Objekt " + inputSplit[1] + " wurde nicht gefunden.\n");
+                            break;
+                        }
+                    case "delete": { item.delete(Convert.ToInt32(inputSplit[1])); Console.WriteLine(); item.print(); break; }
+                    case "print": { Console.WriteLine(); item.print(); break; }
                     case "exit": { againInnerLoop = false; break; }
                     default: { Console.Write("\nIhre Eingabe stimmt nicht mit der vorgegebenen Syntax überein."); break; }
                 }

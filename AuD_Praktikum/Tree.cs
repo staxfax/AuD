@@ -29,7 +29,7 @@ namespace AuD_Praktikum
         public bool search(int elem)
         {
             BinTreeNode a = searchNode(elem);
-            if (a.zahl == elem)
+            if (a != null)
                 return true;
             else
                 return false;

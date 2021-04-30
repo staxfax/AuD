@@ -3,24 +3,24 @@ namespace AuD_Praktikum
 {
     // Insgesamt vier Klassen für verkettete Listen
 
-    class SetSortedLinkedList : ISetSorted
-    {
+    //class SetSortedLinkedList : ISetSorted
+    //{
         
-    }
+    //}
 
-    class SetUnsortedLinkedList : ISetUnsorted
-    {
+    //class SetUnsortedLinkedList : ISetUnsorted
+    //{
 
-    }
+    //}
 
-    class MultiSetSortedLinkedList : IMultiSetSorted
-    {
+    //class MultiSetSortedLinkedList : IMultiSetSorted
+    //{
 
-    }
+    //}
 
-    class MultiSetUnsortedLinkedList : IMultiSetUnsorted
-    {
+    //class MultiSetUnsortedLinkedList : IMultiSetUnsorted
+    //{
 
-    }
+    //}
 
 }
