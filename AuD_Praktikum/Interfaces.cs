@@ -3,28 +3,28 @@ namespace AuD_Praktikum
 {
     interface IDictionary
     {
-        bool search(int elem)
+        bool search(int elem);
         // true = gefunden
-        {
+       
 
-        }
+        
 
-        bool insert(int elem)
+        bool insert(int elem);
         // true = hinzugefügt
-        {
+        
 
-        }
+        
 
-        bool delete(int elem)
+        bool delete(int elem);
         // true = gelöscht
-        {
+        
 
-        }
+        
 
-        void print()
-        {
+        void print();
+        
 
-        }
+        
 
 
     }
