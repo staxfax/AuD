@@ -5,7 +5,7 @@ namespace Application
     {
         public TestClass()
         {
-          Console.WriteLine("Hallo meine Freunde :), Test2");
+          Console.WriteLine("Hallo meine Freunde :)");
             Console.ReadKey();
 
         // Test Kommentar -Axel 20210427 1812
