@@ -4,7 +4,8 @@ using System.Text;
 
 namespace AuD_Praktikum
 {
-    class BinTreeNode
+   
+    class BinTreeNode 
     {
         public int zahl;
         public BinTreeNode left;
@@ -15,6 +16,10 @@ namespace AuD_Praktikum
         }
     }
 
+    /// <summary>
+    /// Representiert eine generic <see cref="BinSearchTree{T}"/> Klasse 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     class BinSearchTree : ISetSorted
     {
         protected BinTreeNode root;
@@ -41,6 +46,8 @@ namespace AuD_Praktikum
         /// </summary>
         /// <param name="elem">zu suchendes Element</param>
         /// <returns>gefundener Knoten oder null, wenn nicht gefunden</returns>
+        
+
         protected BinTreeNode searchNode(int elem)
         {
             BinTreeNode a = root;
@@ -97,7 +104,7 @@ namespace AuD_Praktikum
         public virtual bool delete(int elem)
         {
             BinTreeNode a = searchNode(elem);
-            BinTreeNode b = new BinTreeNode();
+            BinTreeNode b;      
             if (a == null)
                 return false;
             if (a.right != null && a.left != null)

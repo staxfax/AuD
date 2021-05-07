@@ -16,12 +16,19 @@ namespace AuD_Praktikum
     }
     class Treap : BinSearchTree
     {
-        private TreapNode root;
-
         public Treap()
         {
             root = null;
         }
 
+        public TreapNode search(int elem)
+        {
+            return null;// searchNode();
+        }
+
+       
     }
+
+
+
 }
