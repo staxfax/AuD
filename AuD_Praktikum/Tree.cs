@@ -46,8 +46,6 @@ namespace AuD_Praktikum
         /// </summary>
         /// <param name="elem">zu suchendes Element</param>
         /// <returns>gefundener Knoten oder null, wenn nicht gefunden</returns>
-        
-
         protected BinTreeNode searchNode(int elem)
         {
             BinTreeNode a = root;
@@ -83,9 +81,19 @@ namespace AuD_Praktikum
         /// <returns>true, wenn Element eingefügt wurde</returns>
         public virtual bool insert(int elem)
         {
-            BinTreeNode a = searchNode(elem);
-            if (a != null)
+            BinTreeNode a = new BinTreeNode();
+            a = insert(a, elem);
+            if (a == null)
                 return false;
+            else
+                return true;
+        }
+
+        protected BinTreeNode insert(BinTreeNode a, int elem)
+        {
+            a = searchNode(elem);
+            if (a != null)
+                return null;
             a = insertNode(elem);
             if (dir == "root")
                 root = a;
@@ -93,7 +101,7 @@ namespace AuD_Praktikum
                 pred.left = a;
             else
                 pred.right = a;
-            return true;
+            return a;
         }
 
         /// <summary>
