@@ -23,6 +23,11 @@ namespace AuD_Praktikum
     {
         private Random random;
 
+        /// <summary>
+        /// Defines the Min-Heap (true) or Max-Heap (false)
+        /// </summary>
+        public bool MinHeap = true;
+
         public Treap()
         {
             root = null;
@@ -37,9 +42,21 @@ namespace AuD_Praktikum
             return a;
         }
 
-        public void RotationHeap(TreapNode n)
+        //Funktion, um die jeweiligen Knoten zu tauschen und deren Pointer wechseln 
+        private void SwapDown(TreapNode n)
         {
-            bool left = n.left.zahl < n.right.zahl;
+            bool left = true;
+            if (n.left == null)
+            {
+                // gehen in die rechte Richtung
+                left = false;
+            }
+            // Rechts und Links vorhanden
+            else if (n.right != null)
+            {
+                // welches ist der kleinere Schlüssel
+                left = n.left.zahl < n.right.zahl;
+            }
             if (left)
             {
                 if (n.zahl > n.left.zahl)
@@ -51,7 +68,17 @@ namespace AuD_Praktikum
                     n.right = braun.right;
                     braun.right = blau;
                     //Vorgänger zeigt auf Nachfolger
-                    pred.left = braun;
+                    if (pred != null)
+                    {
+                        if (pred.left == n)
+                        {
+                            pred.left = braun;
+                        }
+                        else
+                        {
+                            pred.right = braun;
+                        }
+                    }
                     braun.left = n;
                 }
             }
@@ -66,27 +93,79 @@ namespace AuD_Praktikum
                     n.left = braun.left;
                     braun.left = blau;
                     //Vorgänger zeigt auf Nachfolger
-                    pred.right = braun;
+                    if (pred != null)
+                    {
+                        if (pred.left == n)
+                        {
+                            pred.left = braun;
+                        }
+                        else
+                        {
+                            pred.right = braun;
+                        }
+                    }
                     braun.right = n;
                 }
             }
         }
 
+        /// <summary>
+        /// Funktion damit Heap-Bedingung erfüllt ist, Zahlen "durchsickern"
+        /// </summary>
+        /// <param name="n"></param>
         public void DownHeap(TreapNode n)
         {
-            if(n != null)
+            if(n != null && (n.left != null || n.right != null))
             {
+                //look in tree to find pred(parent) node
                 BinTreeNode found = searchNode(n.zahl);
                 if(found != null)
                 {
-                    RotationHeap(n);
+                    SwapDown(n);
                 }
             }
         }
 
+        public void RotationHeap(TreapNode n)
+        {
+            if (n.left == null && n.right == null)
+            {
+                //look in tree to find pred(parent) node
+                BinTreeNode found = searchNode(n.zahl);
+                if (found != null && pred != null)
+                {
+                    BinTreeNode vater = pred;
+                    searchNode(vater.zahl);
+                    BinTreeNode opa = pred;
+                    if (opa != null)
+                    {
+                        if (opa.left == vater)
+                        {
+                            opa.left = n;
+                        }
+                        else
+                        {
+                            opa.right = n;
+                        }
+                    }
+                    if (n == vater.right)
+                    {
+                        n.left = vater;
+                        vater.right = null;
+                    }
+                    else
+                    {
+                        n.right = vater;
+                        vater.left = null;
+                    }
+                }
+            }
+        }
+
+        //DownHeap verwenden, um alle Knoten n zu bearbeiten
         public void BuildHeap()
         {
-
+           
         }
     }
 
