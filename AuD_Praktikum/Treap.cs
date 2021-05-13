@@ -134,29 +134,32 @@ namespace AuD_Praktikum
                 BinTreeNode found = searchNode(n.zahl);
                 if (found != null && pred != null)
                 {
-                    BinTreeNode vater = pred;
-                    searchNode(vater.zahl);
-                    BinTreeNode opa = pred;
-                    if (opa != null)
+                    while(n.zahl >= pred.zahl)
                     {
-                        if (opa.left == vater)
+                        BinTreeNode vater = pred;
+                        searchNode(vater.zahl);
+                        BinTreeNode opa = pred;
+                        if (opa != null)
                         {
-                            opa.left = n;
+                            if (opa.left == vater)
+                            {
+                                opa.left = n;
+                            }
+                            else
+                            {
+                                opa.right = n;
+                            }
+                        }
+                        if (n == vater.right)
+                        {
+                            n.left = vater;
+                            vater.right = null;
                         }
                         else
                         {
-                            opa.right = n;
+                            n.right = vater;
+                            vater.left = null;
                         }
-                    }
-                    if (n == vater.right)
-                    {
-                        n.left = vater;
-                        vater.right = null;
-                    }
-                    else
-                    {
-                        n.right = vater;
-                        vater.left = null;
                     }
                 }
             }
