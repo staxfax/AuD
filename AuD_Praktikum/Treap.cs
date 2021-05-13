@@ -42,72 +42,6 @@ namespace AuD_Praktikum
             return a;
         }
 
-        //Funktion, um die jeweiligen Knoten zu tauschen und deren Pointer wechseln 
-        private void SwapDown(TreapNode n)
-        {
-            bool left = true;
-            if (n.left == null)
-            {
-                // gehen in die rechte Richtung
-                left = false;
-            }
-            // Rechts und Links vorhanden
-            else if (n.right != null)
-            {
-                // welches ist der kleinere Schlüssel
-                left = n.left.zahl < n.right.zahl;
-            }
-            if (left)
-            {
-                if (n.zahl > n.left.zahl)
-                {
-                    BinTreeNode braun = n.left;
-                    n.left = braun.left;
-                    //tausche die Verbindungen nach rechts
-                    BinTreeNode blau = n.right;
-                    n.right = braun.right;
-                    braun.right = blau;
-                    //Vorgänger zeigt auf Nachfolger
-                    if (pred != null)
-                    {
-                        if (pred.left == n)
-                        {
-                            pred.left = braun;
-                        }
-                        else
-                        {
-                            pred.right = braun;
-                        }
-                    }
-                    braun.left = n;
-                }
-            }
-            else
-            {
-                if (n.zahl > n.right.zahl)
-                {
-                    BinTreeNode braun = n.right;
-                    n.right = braun.right;
-                    //tausche die Verbindungen nach links
-                    BinTreeNode blau = n.left;
-                    n.left = braun.left;
-                    braun.left = blau;
-                    //Vorgänger zeigt auf Nachfolger
-                    if (pred != null)
-                    {
-                        if (pred.left == n)
-                        {
-                            pred.left = braun;
-                        }
-                        else
-                        {
-                            pred.right = braun;
-                        }
-                    }
-                    braun.right = n;
-                }
-            }
-        }
 
         /// <summary>
         /// Funktion damit Heap-Bedingung erfüllt ist, Zahlen "durchsickern"
@@ -121,7 +55,54 @@ namespace AuD_Praktikum
                 BinTreeNode found = searchNode(n.zahl);
                 if(found != null)
                 {
-                    SwapDown(n);
+                    while(!(n.left == null && n.right == null)) // (n.left != null || n.right != null)
+                    {
+                        bool direction = true;
+                        if (n.left == null)
+                        {
+                            // gehen in die rechte Richtung
+                            direction = false;
+                        }
+                        // Rechts und Links vorhanden
+                        else if (n.right != null)
+                        {
+                            // welches ist der kleinere Schlüssel
+                            direction = n.left.zahl < n.right.zahl;
+                        }
+                        BinTreeNode next;
+                        if (direction)
+                        {
+                            next = n.left;
+                            n.left = next.left;
+                            //tausche die Verbindungen nach rechts
+                            BinTreeNode right = n.right;
+                            n.right = next.right;
+                            next.right = right;
+                            next.left = n;
+                        }
+                        else
+                        {
+                            next = n.right;
+                            n.right = next.right;
+                            //tausche die Verbindungen nach links
+                            BinTreeNode left = n.left;
+                            n.left = next.left;
+                            next.left = left;
+                            next.right = n;
+                        }
+                        //Vorgänger zeigt auf Nachfolger
+                        if (pred != null)
+                        {
+                            if (pred.left == n)
+                            {
+                                pred.left = next;
+                            }
+                            else
+                            {
+                                pred.right = next;
+                            }
+                        }
+                    }
                 }
             }
         }
