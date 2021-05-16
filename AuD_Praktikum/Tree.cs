@@ -75,23 +75,27 @@ namespace AuD_Praktikum
         }
 
         /// <summary>
-        /// offizielle Einfügefunktion, enthält searchNode und insertNode
+        /// offizielle Einfügefunktion, ruft insert_ auf
         /// </summary>
         /// <param name="elem">einzufügendes Element</param>
         /// <returns>true, wenn Element eingefügt wurde</returns>
         public virtual bool insert(int elem)
         {
-            BinTreeNode a = new BinTreeNode();
-            a = insert(a, elem);
+            BinTreeNode a = insert_(elem);
             if (a == null)
                 return false;
             else
                 return true;
         }
 
-        protected BinTreeNode insert(BinTreeNode a, int elem)
+        /// <summary>
+        /// Hilfseinfügefunktion, enthält searchNode und insertNode
+        /// </summary>
+        /// <param name="elem">einzufügendes Element</param>
+        /// <returns>eingefügter Knoten oder null, wenn Element schon vorhanden</returns>
+        protected BinTreeNode insert_(int elem)
         {
-            a = searchNode(elem);
+            BinTreeNode a = searchNode(elem);
             if (a != null)
                 return null;
             a = insertNode(elem);
