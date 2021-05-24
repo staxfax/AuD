@@ -14,7 +14,7 @@ namespace AuD_Praktikum
 
         public override string ToString()
         {
-            return $"{base.ToString()}; {priority,3}";
+            return $"{zahl}({priority})";
         }
 
     }
@@ -27,6 +27,15 @@ namespace AuD_Praktikum
         {
             root = null;
             random = new Random();
+
+            // test
+            root = new TreapNode(2) { zahl = 4};
+            root.left = new TreapNode(19) { zahl = 1, parent = root as TreapNode };
+            root.left.right = new TreapNode(22) { zahl = 2, parent = root.left as TreapNode };
+
+            root.right = new TreapNode(13) { zahl = 7, parent = root as TreapNode };
+            root.right.left = new TreapNode(39) { zahl = 5, parent = root.right as TreapNode };
+            root.right.right = new TreapNode(40) { zahl = 8, parent = root.right as TreapNode };
         }
 
         /// <summary>
@@ -36,7 +45,7 @@ namespace AuD_Praktikum
         /// <returns></returns>
         protected override BinTreeNode insertNode(int elem)
         {
-            TreapNode a = new TreapNode(random.Next(0, 51));
+            TreapNode a = new TreapNode(1);// random.Next(0, 51));
             a.zahl = elem;
             a.left = null; a.right = null;
             return a;
@@ -62,12 +71,14 @@ namespace AuD_Praktikum
         /// <param name="n">leaf of tree</param>
         private void RotationHeap(TreapNode n)
         {
+            // check if n is leaf
             if (n.left == null && n.right == null)
             {
                 //schleife solange parent vorhanden und priotity kleiner priority partent
-                while (n.parent != null && n.priority <= n.parent.priority)
+                while (n.parent != null && n.priority < n.parent.priority)
                 {
-                    BinTreeNode grandParent = n.parent.parent;
+                    TreapNode parent = n.parent;
+                    TreapNode grandParent = n.parent.parent;
                     if (grandParent != null)
                     {
                         if (grandParent.left == n.parent)
@@ -79,25 +90,67 @@ namespace AuD_Praktikum
                             grandParent.right = n;
                         }
                     }
-                    if (n == n.parent.right)
+                    n.parent = grandParent;
+
+                    // find position for parent
+                    if (n == parent.left)
                     {
+                        // n is on the left side
                         BinTreeNode left = n.left;
-                        n.left = n.parent.left;
-                        n.parent.left = left;
-                        n.parent.right = n.right;
+                        n.left = n != n.parent.left ? n.parent.left : null;
+                        if (left.zahl < n.right.zahl)
+                        {
+                            n.parent.left = left;
+                            n.parent.right = n.right;
+                        }
+                        else
+                        {
+                            n.parent.left = n.right;
+                            n.parent.right = left;
+                        }
                         n.right = n.parent;
                     }
                     else
                     {
-                        BinTreeNode right = n.right;
-                        n.right = n.parent.right;
-                        n.parent.right = right;
-                        n.parent.left = n.left;
-                        n.left = n.parent;
+                        //+++++++++++++++++
+                        // n is on the right side
+                        BinTreeNode right = n.right; // keep the n->right
+                        BinTreeNode left = n.left; // keep the n->left
+                        if (right != null)
+                        {
+                            if (parent.left != null)
+                            {
+                                if (left.zahl > parent.zahl)
+                                {
+                                    parent.right = left;
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                        }
+                        if (left != null)
+                        {
+                            if (left.zahl > parent.zahl)
+                            {
+                                parent.right = left;
+                                n.left = parent.left;
+                            }
+                            else
+                            {
+                                n.parent.right = n.left;
+                                n.parent.left = right;
+                            }
+                        }
+                        else
+                        {
+                            parent.right = null;
+                        }
+
+                        n.left = parent;
                     }
                     // replace the parent
-                    TreapNode parent = n.parent;
-                    n.parent = parent.parent;
                     parent.parent = n;
                 }
                 if (n.parent == null)
@@ -111,42 +164,33 @@ namespace AuD_Praktikum
         /// <param name="n"></param>
         private void DownHeap(TreapNode n)
         {
+            bool direction = n.left != null;
             while (!(n.left == null && n.right == null)) // (n.left != null || n.right != null)
             {
-                bool direction = true;
-                if (n.left == null)
-                {
-                    // gehen in die rechte Richtung
-                    direction = false;
-                }
-                // Rechts und Links vorhanden
-                else if (n.right != null)
-                {
-                    // welches ist der kleinere Schlüssel
-                    direction = n.left.zahl < n.right.zahl;
-                }
-
                 TreapNode next;
                 //If direction true go left
                 if (direction)
                 {
                     next = n.left as TreapNode;
-                    n.left = next.left;
-                    //tausche die Verbindungen nach rechts
-                    BinTreeNode right = n.right;
-                    n.right = next.right;
-                    next.right = right;
-                    next.left = n;
+                    if (next != null)
+                    {
+                        n.left = next.right;
+                        //tausche die Verbindungen nach rechts
+                        next.right = n;
+                    }
                 }
                 else
                 {
                     next = n.right as TreapNode;
-                    n.right = next.right;
-                    //tausche die Verbindungen nach links
-                    BinTreeNode left = n.left;
-                    n.left = next.left;
-                    next.left = left;
-                    next.right = n;
+                    if (next != null)
+                    {
+                        n.right = next.right; 
+                        //tausche die Verbindungen nach links
+                        BinTreeNode left = n.left;
+                        n.left = next.left;
+                        next.left = left;
+                        next.right = n;
+                    }
                 }
 
                 //Vorgänger zeigt auf Nachfolger
@@ -164,8 +208,15 @@ namespace AuD_Praktikum
 
                 TreapNode grandParent = n.parent;
                 n.parent = next;
-                next.parent = grandParent;
-
+                if (next != null)
+                {
+                    next.parent = grandParent;
+                    if (next.parent == null)
+                    {
+                        root = next;
+                    }
+                }
+                direction = n.right == null;
             }
         }
 
