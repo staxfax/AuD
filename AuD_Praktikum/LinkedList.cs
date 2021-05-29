@@ -1,11 +1,9 @@
 ﻿using System;
 namespace AuD_Praktikum
 {
-    // Insgesamt vier Klassen für verkettete Listen
-
     abstract class LinkedList : IDictionary
     {
-        private class LElem
+        public class LElem
         {
             public int elem;
 
@@ -21,7 +19,7 @@ namespace AuD_Praktikum
             public LElem(int elem) { this.elem = elem; }
         }
 
-        LElem first, last;
+        public LElem first, last;
 
         public int? index; // Index zur Zwischenspeicherung der Position nach Suche
 
@@ -45,17 +43,17 @@ namespace AuD_Praktikum
             // Fall 4: Das gesuchte Element befindet sich am Ende
 
             if (first == null) // Fall 1
-            { 
+            {
                 index = null;
                 return false;
             }
             if (first.elem.CompareTo(elem) == 0) // Fall 2
-            { 
+            {
                 index = 0;
                 return true;
             }
-            else if(last.elem.CompareTo(elem) != 0) // Fall 3
-            { 
+            else if (last.elem.CompareTo(elem) != 0) // Fall 3
+            {
                 LElem tmp = first.next;
                 index = -1;
                 while (tmp.next != null && tmp.elem.CompareTo(elem) != 0)
@@ -72,7 +70,7 @@ namespace AuD_Praktikum
                 }
             }
             else // Fall 4
-            { 
+            {
                 index = count - 1;
                 return true;
             }
@@ -138,11 +136,36 @@ namespace AuD_Praktikum
 
     }
 
+    // Insgesamt vier Klassen für verkettete Listen
+
     class MultiSetSortedLinkedList : LinkedList
     {
         public override bool insert(int elem)
         {
-            return false;
+            LElem nelem = new LElem(elem);
+            if (index == 0)
+            {
+                first = last = nelem;
+                count += 1;
+                return true;
+            }
+            else if (index == count - 1)
+            {
+                last.next = nelem;
+                last = nelem;
+                count += 1;
+                return true;
+            }
+            else
+            {
+                search(elem);
+                LElem tmp = first;
+                for (int i = 1; i < index; i++)
+                    tmp = tmp.next;
+                nelem.next = tmp.next;
+                tmp.next = nelem;
+                return true;
+            }
         }
     }
 
@@ -150,7 +173,21 @@ namespace AuD_Praktikum
     {
         public override bool insert(int elem)
         {
-            return false;
+            LElem nelem = new LElem(elem);
+            if (first == null) // Liste leer
+            {
+                first = last = nelem;
+                count += 1;
+                return true;
+            }
+            else // Liste nicht leer
+            {
+                last.next = nelem;
+                last = nelem;
+                count += 1;
+                return true;
+
+            }
         }
     }
 
@@ -158,7 +195,13 @@ namespace AuD_Praktikum
     {
         public override bool insert(int elem)
         {
-            return false;
+            if (search(elem) == false)
+            {
+                base.insert(elem);
+                return true;
+            }
+            else
+                return false;
         }
     }
 
@@ -166,7 +209,27 @@ namespace AuD_Praktikum
     {
         public override bool insert(int elem)
         {
-            return false;
+            if (search(elem) == false) // elem noch nicht vorhanden
+            {
+                base.insert(elem);
+                return true;
+
+                /*if (first == null) // Liste leer
+                {
+                    first = last = nelem;
+                    count += 1;
+                    return true;
+                }
+                else // Liste nicht leer
+                {
+                    last.next = nelem;
+                    last = nelem;
+                    count += 1;
+                    return true;
+                }*/
+            }
+            else // elem bereits vorhanden
+                return false;
         }
     }
 
