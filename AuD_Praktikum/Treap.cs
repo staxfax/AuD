@@ -28,14 +28,20 @@ namespace AuD_Praktikum
             root = null;
             random = new Random();
 
-            // test
-            root = new TreapNode(2) { zahl = 4};
-            root.left = new TreapNode(19) { zahl = 1, parent = root as TreapNode };
-            root.left.right = new TreapNode(22) { zahl = 2, parent = root.left as TreapNode };
+            // test delete 9,30
+            //root = new TreapNode(5) { zahl = 7 };
+            //root.left = new TreapNode(33) { zahl = 5, parent = root as TreapNode };
+            ////root.left.right = new TreapNode(22) { zahl = 2, parent = root.left as TreapNode };
 
-            root.right = new TreapNode(13) { zahl = 7, parent = root as TreapNode };
-            root.right.left = new TreapNode(39) { zahl = 5, parent = root.right as TreapNode };
-            root.right.right = new TreapNode(40) { zahl = 8, parent = root.right as TreapNode };
+            //root.right = new TreapNode(30) { zahl = 9, parent = root as TreapNode };
+            //root.right.left = new TreapNode(46) { zahl = 8, parent = root.right as TreapNode };
+            //root.right.right = new TreapNode(30) { zahl = 17, parent = root.right as TreapNode };
+
+            //root.right.right.left = new TreapNode(41) { zahl = 16, parent = root.right.right as TreapNode };
+            //root.right.right.right = new TreapNode(40) { zahl = 30, parent = root.right.right as TreapNode };
+
+            //root.right.right.left.left = new TreapNode(41) { zahl = 12, parent = root.right.right.left as TreapNode };
+            //root.right.right.left.left.right = new TreapNode(44) { zahl = 15, parent = root.right.right.left.left as TreapNode };
         }
 
         /// <summary>
@@ -45,7 +51,7 @@ namespace AuD_Praktikum
         /// <returns></returns>
         protected override BinTreeNode insertNode(int elem)
         {
-            TreapNode a = new TreapNode(1);// random.Next(0, 51));
+            TreapNode a = new TreapNode(random.Next(0, 50)); 
             a.zahl = elem;
             a.left = null; a.right = null;
             return a;
@@ -92,62 +98,20 @@ namespace AuD_Praktikum
                     }
                     n.parent = grandParent;
 
+                    BinTreeNode right = n.right; // keep the n->right
+                    BinTreeNode left = n.left; // keep the n->left
+
                     // find position for parent
                     if (n == parent.left)
                     {
                         // n is on the left side
-                        BinTreeNode left = n.left;
-                        n.left = n != n.parent.left ? n.parent.left : null;
-                        if (left.zahl < n.right.zahl)
-                        {
-                            n.parent.left = left;
-                            n.parent.right = n.right;
-                        }
-                        else
-                        {
-                            n.parent.left = n.right;
-                            n.parent.right = left;
-                        }
-                        n.right = n.parent;
+                        parent.left = right;
+                        n.right = parent;
                     }
                     else
                     {
-                        //+++++++++++++++++
                         // n is on the right side
-                        BinTreeNode right = n.right; // keep the n->right
-                        BinTreeNode left = n.left; // keep the n->left
-                        if (right != null)
-                        {
-                            if (parent.left != null)
-                            {
-                                if (left.zahl > parent.zahl)
-                                {
-                                    parent.right = left;
-                                }
-                                else
-                                {
-
-                                }
-                            }
-                        }
-                        if (left != null)
-                        {
-                            if (left.zahl > parent.zahl)
-                            {
-                                parent.right = left;
-                                n.left = parent.left;
-                            }
-                            else
-                            {
-                                n.parent.right = n.left;
-                                n.parent.left = right;
-                            }
-                        }
-                        else
-                        {
-                            parent.right = null;
-                        }
-
+                        parent.right = left;
                         n.left = parent;
                     }
                     // replace the parent
@@ -164,7 +128,9 @@ namespace AuD_Praktikum
         /// <param name="n"></param>
         private void DownHeap(TreapNode n)
         {
-            bool direction = n.left != null;
+            TreapNode left = n.left as TreapNode;
+            TreapNode right = n.right as TreapNode;
+            bool direction = left != null && (right == null || (right != null && left.priority < right.priority));
             while (!(n.left == null && n.right == null)) // (n.left != null || n.right != null)
             {
                 TreapNode next;
@@ -184,12 +150,8 @@ namespace AuD_Praktikum
                     next = n.right as TreapNode;
                     if (next != null)
                     {
-                        n.right = next.right; 
-                        //tausche die Verbindungen nach links
-                        BinTreeNode left = n.left;
-                        n.left = next.left;
-                        next.left = left;
-                        next.right = n;
+                        n.right = next.left;
+                        next.left = n;
                     }
                 }
 
@@ -227,13 +189,20 @@ namespace AuD_Praktikum
             if (a != null)
             {
                 DownHeap(a);
-                if(a == a.parent.left)
+                if(a.parent == null)
                 {
-                    a.parent.left = null;
+                    root = null;
                 }
                 else
                 {
-                    a.parent.right = null;
+                    if (a == a.parent.left)
+                    {
+                        a.parent.left = null;
+                    }
+                    else
+                    {
+                        a.parent.right = null;
+                    }
                 }
                 return true;
             }
