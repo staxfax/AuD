@@ -106,20 +106,24 @@ namespace AuD_Praktikum
                     }
                     n.parent = grandParent;
 
-                    BinTreeNode right = n.right; // behalte n->right
-                    BinTreeNode left = n.left; // behalte n->left
+                    TreapNode right = (TreapNode)n.right; // behalte n->right
+                    TreapNode left = (TreapNode)n.left; // behalte n->left
 
                     // Position für Parent finden
                     if (n == parent.left)
                     {
                         // n ist links
                         parent.left = right;
+                        if (right != null)
+                            right.parent = parent;
                         n.right = parent;
                     }
                     else
                     {
                         //n ist rechts
                         parent.right = left;
+                        if (left != null)
+                            left.parent = parent;
                         n.left = parent;
                     }
                     // Parent ersetzen
