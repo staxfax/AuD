@@ -232,6 +232,7 @@ namespace AuD_Praktikum
                 if (hashTab[i] == null)
                 {
                     Console.WriteLine("/");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -270,4 +271,5 @@ namespace AuD_Praktikum
 //Abbruchkriterium für search bei quadratischer Sondierung fehlt noch
 //        "         "  insert  "       "             "       "     "
 //        "         "  delete  "       "             "       "     "
-//Verknüpfung aus Main fehlt noch 
+//Verknüpfung aus Main fehlt noch
+//Evtl für negative Eingabeelemente bei separater Verkettung erlauben
