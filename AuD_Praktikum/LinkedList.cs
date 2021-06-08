@@ -7,7 +7,7 @@ namespace AuD_Praktikum
         {
             public int elem;
 
-            public LElem next = null; // einfach oder doppelt verkette Liste besser??
+            public LElem next = null;
             public LElem prev = null;
 
             public LElem(int elem) { this.elem = elem; }
