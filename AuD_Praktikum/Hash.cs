@@ -2,27 +2,27 @@
 
 namespace AuD_Praktikum
 {
-    abstract class Hash : ISetUnsorted
+    abstract class Hash : ISetUnsorted      // abstrakte Klasse mit Konstruktoren
     {
         public int tabGroeße = 12;
         public HashElement[] hashTab;
 
-        public Hash()
+        public Hash()                      // Konstruktor 1, falls keine TabGröße gewünscht, Standardgröße 12
         {
             hashTab = new HashElement[tabGroeße];
         }
-        public Hash(int gewuenschteGroeße)
+        public Hash(int gewuenschteGroeße) // Konstruktor 2, falls TabGröße gewünscht
         {
             tabGroeße = gewuenschteGroeße;
             hashTab = new HashElement[tabGroeße];
         }
-        public abstract bool search(int elem);
+        public abstract bool search(int elem);   // abstrakte Methoden aus ISetUnsorted bzw IDictionary
         public abstract bool insert(int elem);
         public abstract bool delete(int elem);
         public abstract void print();
     }
 
-    class HashElement
+    class HashElement                    // Klasse für Hashelemente, v.a. für Verkettung wichtig -> einfache Liste
     {
         public int element { get; set; }
         public HashElement nachfolger { get; set; }
@@ -34,12 +34,12 @@ namespace AuD_Praktikum
         }
     }
 
-    class HashTabSepChain : Hash
+    class HashTabSepChain : Hash        // Klasse für separate Verkettung
     {
-        public HashTabSepChain() : base() { }
+        public HashTabSepChain() : base() { }                        // Konstruktoren aus class Hash
         public HashTabSepChain(int tabGroeße) : base(tabGroeße) { }
 
-        public override bool insert(int elem)
+        public override bool insert(int elem)                // Einfügemethode
         {
             HashElement einzufügen = new HashElement(elem);
             int pos = getVertikalePos(elem);
@@ -60,7 +60,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public override bool search(int elem)
+        public override bool search(int elem)            // Suchmethode
         {
             var (_, aktuelles) = getHorizontalePos(elem);
 
@@ -75,7 +75,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public override bool delete(int elem)
+        public override bool delete(int elem)         // Löschmethode
         {
             int pos = getVertikalePos(elem);
             var (vorgänger, aktuelles) = getHorizontalePos(elem);
@@ -92,7 +92,7 @@ namespace AuD_Praktikum
             return true;
         }
 
-        public override void print()
+        public override void print()                 //Darstellmethode
         {
             HashElement laufvariable;
             for (int i = 0; i < tabGroeße; i++)
@@ -115,7 +115,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public int getVertikalePos(int elem)
+        public int getVertikalePos(int elem)      // Methode zum bestimmen der "vertikalen" Position, also der Position in der Hash Tabelle
         {
             if (elem < 0)
             {
@@ -129,7 +129,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public (HashElement vorgänger, HashElement aktuelles) getHorizontalePos(int elem)
+        public (HashElement vorgänger, HashElement aktuelles) getHorizontalePos(int elem)   // Methode zum Bestimmen der "horzontalen" Position, also der Position in der verketteten Liste
         {
             int pos = getVertikalePos(elem);
             HashElement gesuchtes = hashTab[pos];
@@ -147,17 +147,17 @@ namespace AuD_Praktikum
                     gesuchtes = gesuchtes.nachfolger;
                 }
             }
-            return (null, null);
+            return (null, null);       // Element existiert nicht in Hashtabelle
         }
 
     }
 
-    class HashTabQuadProb : Hash
+    class HashTabQuadProb : Hash      // Klasse für quadratische Sondierung
     {
-        public HashTabQuadProb() : base() { }
+        public HashTabQuadProb() : base() { }                     // Konstruktoren aus class Hash
         public HashTabQuadProb(int tabGroeße) : base(tabGroeße) { }
 
-        public override bool insert(int elem)
+        public override bool insert(int elem)         // Einfügemethode
         {
             HashElement einzufügen = new HashElement(elem);
             int i = 0;
@@ -183,7 +183,7 @@ namespace AuD_Praktikum
 
         }
 
-        public override bool search(int elem)
+        public override bool search(int elem)      // Suchmethode
         {
             int i = 0;
             int pos;
@@ -203,7 +203,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public override bool delete(int elem)
+        public override bool delete(int elem)     // Löschmethode
         {
             int i = 0;
             int pos;
@@ -225,7 +225,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public override void print()
+        public override void print()           // Ausgabefunktion
         {
             for (int i = 0; i < tabGroeße; i++)
             {
@@ -240,7 +240,7 @@ namespace AuD_Praktikum
             }
         }
 
-        public int getHorizontalePosPlus(int elem, int i)
+        public int getHorizontalePosPlus(int elem, int i)   // Methode für Hashfunktion mit quadratischer Sondierung, Teil mit Addition
         {
             int umrechner = elem;
             int pos;
@@ -253,7 +253,7 @@ namespace AuD_Praktikum
             return pos;
         }
 
-        public int getHorizontalePosMinus(int elem, int i)
+        public int getHorizontalePosMinus(int elem, int i)  // Methode für Hashfunktion mit quadratischer Sondierung, Teil mit Subtraktion
         {
             int umrechner = elem;
             int pos;
