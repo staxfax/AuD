@@ -232,7 +232,6 @@ namespace AuD_Praktikum
                 if (hashTab[i] == null)
                 {
                     Console.WriteLine("/");
-                    Console.WriteLine();
                 }
                 else
                 {
@@ -272,4 +271,3 @@ namespace AuD_Praktikum
 //        "         "  insert  "       "             "       "     "
 //        "         "  delete  "       "             "       "     "
 //Verknüpfung aus Main fehlt noch
-//Evtl für negative Eingabeelemente bei separater Verkettung erlauben
