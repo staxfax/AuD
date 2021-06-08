@@ -3,29 +3,23 @@ namespace AuD_Praktikum
 {
     abstract class LinkedList : IDictionary
     {
-        public class LElem
+        protected class LElem
         {
             public int elem;
 
-            //private int index;
-            //public int Index
-            //{
-            //    get { return index; }
-            //    set { index = value; }
-            //}
-
-            public LElem next; // einfach oder doppelt verkette Liste besser??
+            public LElem next = null; // einfach oder doppelt verkette Liste besser??
+            public LElem prev = null;
 
             public LElem(int elem) { this.elem = elem; }
         }
 
-        public LElem first, last;
+        protected LElem first, last;
 
-        public int? index; // Index zur Zwischenspeicherung der Position nach Suche
+        protected LElem position; // Position des Elements VOR gefundenen Elements, null falls nicht gefunden
 
-        public int count; // Anzahl der Elemente in der Liste
+        //public int? index; // Index zur Zwischenspeicherung der Position nach Suche
 
-        // LElem tmp; tmp von überall zugreifbar machen, eliminiert Index Zwang??
+        protected int count; // Anzahl der Elemente in der Liste
 
         // print bei einfach und doppelt verkettet ohnehin gleich
         public void print()
@@ -37,41 +31,37 @@ namespace AuD_Praktikum
         // Suche
         public bool search(int elem)
         {
-            // Fall 1: Liste ist leer
-            // Fall 2: Das gesuchte Element befindet sich am Anfang
-            // Fall 3: Das gesuchte Element befindet sich mittendrin
-            // Fall 4: Das gesuchte Element befindet sich am Ende
-
-            if (first == null) // Fall 1
+            if (first == null) // Liste ist leer
             {
-                index = null;
+                position = null;
                 return false;
             }
-            if (first.elem.CompareTo(elem) == 0) // Fall 2
+            if (first.elem.CompareTo(elem) == 0) // Das gesuchte Element befindet sich am Anfang
             {
-                index = 0;
+                position = first.prev; // Das Element vor gesuchtem Element
                 return true;
             }
-            else if (last.elem.CompareTo(elem) != 0) // Fall 3
+            else if (last.elem.CompareTo(elem) != 0) // Das gesuchte Element befindet sich mittendrin
             {
                 LElem tmp = first.next;
-                index = -1;
                 while (tmp.next != null && tmp.elem.CompareTo(elem) != 0)
                 {
                     tmp = tmp.next;
-                    index++;
                 }
                 if (tmp.next != null)
+                {
+                    position = tmp.prev; // Das Element vor gesuchtem Element
                     return true;
+                }
                 else
                 {
-                    index = null;
+                    position = null;
                     return false;
                 }
             }
-            else // Fall 4
+            else // Das gesuchte Element befindet sich am Ende
             {
-                index = count - 1;
+                position = last.prev; // Das Element vor gesuchtem Element
                 return true;
             }
 
@@ -92,32 +82,24 @@ namespace AuD_Praktikum
                 }
                 else // Mindestens zwei Elemente
                 {
-                    if (index == 0) // Erstes Element löschen
+                    if (position.prev == null) // Erstes Element löschen
                     {
                         first = first.next;
+                        first.prev = null;
                         count--;
                         return true;
                     }
-                    else if (index < count - 1) // Element in der Mitte löschen
+                    else if (position.prev != null && position.next != null) // Element in der Mitte löschen
                     {
-                        LElem tmp = first.next;
-                        while (tmp.next != null && tmp.elem.CompareTo(elem) != 0) // macht irgendwie das Selbe wie search() --> schlauer lösbar????
-                        {
-                            tmp = tmp.next;
-                        }
-                        tmp.next = tmp.next.next;
+                        position.prev.next = position.next;
+                        position.next.prev = position.prev;
                         count--;
                         return true;
                     }
-                    else if (index == count - 1) // Letztes Element löschen
+                    else if (position.next == null) // Letztes Element löschen
                     {
-                        LElem secondlast = first;
-                        while (secondlast.next != last)
-                        {
-                            secondlast = secondlast.next;
-                        }
-                        secondlast.next = null;
-                        last = secondlast; // Neues Ende
+                        last = last.prev;
+                        last.next = null;
                         count--;
                         return true;
                     }
@@ -143,27 +125,48 @@ namespace AuD_Praktikum
         public override bool insert(int elem)
         {
             LElem nelem = new LElem(elem);
-            if (index == 0)
+            if (position.prev == null) // Gesuchtes Element ist erstes
             {
-                first = last = nelem;
-                count += 1;
-                return true;
+                if (first == null) // Liste hat nur ein Element
+                {
+                    first = last = nelem;
+                    count += 1;
+                    return true;
+                }
+                else // Liste hat mehr als ein Element
+                {
+                    nelem.next = first;
+                    first.prev = nelem;
+                    first = nelem;
+                    count += 1;
+                    return true;
+                }
             }
-            else if (index == count - 1)
+            else if (position.next == null) // Gesuchtes Element ist letztes
             {
-                last.next = nelem;
-                last = nelem;
-                count += 1;
-                return true;
+                if (first == null) // Liste hat nur ein Element
+                {
+                    first = last = nelem;
+                    count += 1;
+                    return true;
+                }
+                else  // Liste hat mehr als ein Element
+                {
+                    last.next = nelem;
+                    nelem.prev = last;
+                    last = nelem;
+                    count += 1;
+                    return true;
+                }
             }
-            else
+            else // Gesuchtes Element ist in der Mitte
             {
                 search(elem);
-                LElem tmp = first;
-                for (int i = 1; i < index; i++)
-                    tmp = tmp.next;
-                nelem.next = tmp.next;
-                tmp.next = nelem;
+                nelem.next = position.next; // Vorwärtsverkettung vom neuen Element zur Restliste
+                nelem.prev = position;      // Rückwärtsverkettung vom neuen Elenent zum Listenanfangsstück
+                position.next.prev = nelem; // Rückwärtsverkettung vom nachfolgenden Listenelement
+                position.next = nelem;      // Vorwärtsverkettung zum neuen Element
+                count += 1;
                 return true;
             }
         }
@@ -180,9 +183,10 @@ namespace AuD_Praktikum
                 count += 1;
                 return true;
             }
-            else // Liste nicht leer
+            else // Liste nicht leer -> AddEnd
             {
                 last.next = nelem;
+                nelem.prev = last;
                 last = nelem;
                 count += 1;
                 return true;
@@ -209,26 +213,12 @@ namespace AuD_Praktikum
     {
         public override bool insert(int elem)
         {
-            if (search(elem) == false) // elem noch nicht vorhanden
+            if (search(elem) == false) // Element noch nicht vorhanden
             {
                 base.insert(elem);
                 return true;
-
-                /*if (first == null) // Liste leer
-                {
-                    first = last = nelem;
-                    count += 1;
-                    return true;
-                }
-                else // Liste nicht leer
-                {
-                    last.next = nelem;
-                    last = nelem;
-                    count += 1;
-                    return true;
-                }*/
             }
-            else // elem bereits vorhanden
+            else // Element bereits vorhanden
                 return false;
         }
     }
