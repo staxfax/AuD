@@ -4,7 +4,7 @@ namespace AuD_Praktikum
 {
     abstract class Hash : ISetUnsorted      // abstrakte Klasse mit Konstruktoren
     {
-        public int tabGroeße = 12;
+        public int tabGroeße = 11;  // Für quadratische Sondierung Tabellengröße in Form von p = 4*k+3
         public HashElement[] hashTab;
 
         public Hash()                      // Konstruktor 1, falls keine TabGröße gewünscht, Standardgröße 12
@@ -47,6 +47,7 @@ namespace AuD_Praktikum
             if (eingefügeStelle == null)
             {
                 hashTab[pos] = einzufügen;
+                Console.WriteLine($"{elem} wurde eingefügt!");
                 return true;
             }
             else
@@ -56,6 +57,7 @@ namespace AuD_Praktikum
                     eingefügeStelle = eingefügeStelle.nachfolger;
                 }
                 eingefügeStelle.nachfolger = einzufügen;
+                Console.WriteLine($"{elem} wurde eingefügt!");
                 return true;
             }
         }
@@ -66,11 +68,13 @@ namespace AuD_Praktikum
 
             if (aktuelles == null)
             {
+                Console.WriteLine($"{elem} wurde nicht gefunden!");
                 return false;
                 //new ArgumentOutOfRangeException($"Das Element {elem} wurde nicht gefunden!")
             }
             else
             {
+                Console.WriteLine($"{elem} wurde gefunden!");
                 return true;
             }
         }
@@ -81,14 +85,17 @@ namespace AuD_Praktikum
             var (vorgänger, aktuelles) = getHorizontalePos(elem);
             if (aktuelles == null)
             {
+                Console.WriteLine($"{elem} existiert nicht!");
                 return false;
             }
             if (vorgänger == null)
             {
                 hashTab[pos] = null;
+                Console.WriteLine($"{elem} wurde gelöscht!");
                 return true;
             }
             vorgänger.nachfolger = aktuelles.nachfolger;
+            Console.WriteLine($"{elem} wurde gelöscht!");
             return true;
         }
 
@@ -124,7 +131,7 @@ namespace AuD_Praktikum
             }
             else
             {
-                int pos = elem % (tabGroeße - 1);
+                int pos = elem % (tabGroeße);
                 return pos;
             }
         }
@@ -162,24 +169,31 @@ namespace AuD_Praktikum
             HashElement einzufügen = new HashElement(elem);
             int i = 0;
             int pos;
-            while (1 > 0)
+            int abbruch = -1;
+            while (abbruch <= tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
                 if (hashTab[pos] == null)
                 {
                     hashTab[pos] = einzufügen;
+                    Console.WriteLine($"{elem} wurde eingefügt!");
                     return true;
                 }
+                abbruch++;
 
                 pos = getHorizontalePosMinus(elem, i);
                 if (hashTab[pos] == null)
                 {
                     hashTab[pos] = einzufügen;
+                    Console.WriteLine($"{elem} wurde eingefügt!");
                     return true;
                 }
+                abbruch++;
                 i++;
 
             }
+            Console.WriteLine($"{elem} konnte nicht eingefügt werden, da die Hashtabelle bereits voll ist!");
+            return false;
 
         }
 
@@ -187,18 +201,23 @@ namespace AuD_Praktikum
         {
             int i = 0;
             int pos;
-            while (1 > 0)
+            int abbruch = -1;
+            while (abbruch <= tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
                 if (hashTab[pos].element == elem)
                 {
+                    Console.WriteLine($"{elem} wurde gefunden!");
                     return true;
                 }
+                abbruch++;
                 pos = getHorizontalePosMinus(elem, i);
                 if (hashTab[pos].element == elem)
                 {
+                    Console.WriteLine($"{elem} wurde gefunden!");
                     return true;
                 }
+                abbruch++;
                 i++;
             }
         }
@@ -207,7 +226,8 @@ namespace AuD_Praktikum
         {
             int i = 0;
             int pos;
-            while (1 > 0)
+            int abbruch = -1;
+            while (abbruch <= tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
                 if (hashTab[pos].element == elem)
@@ -215,12 +235,14 @@ namespace AuD_Praktikum
                     hashTab[pos] = null;
                     return true;
                 }
+                abbruch++;
                 pos = getHorizontalePosMinus(elem, i);
                 if (hashTab[pos].element == elem)
                 {
                     hashTab[pos] = null;
                     return true;
                 }
+                abbruch++;
                 i++;
             }
         }
@@ -267,7 +289,5 @@ namespace AuD_Praktikum
         }
     }
 }
-//Abbruchkriterium für search bei quadratischer Sondierung fehlt noch
-//        "         "  insert  "       "             "       "     "
-//        "         "  delete  "       "             "       "     "
+//Negative Zahlen bei separater Verkettung noch anschauen
 //Verknüpfung aus Main fehlt noch
