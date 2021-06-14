@@ -120,20 +120,18 @@ namespace AuD_Praktikum
                     Console.WriteLine();
                 }
             }
+            Console.WriteLine();
         }
 
         public int getVertikalePos(int elem)      // Methode zum bestimmen der "vertikalen" Position, also der Position in der Hash Tabelle
         {
-            if (elem < 0)
+            int umrechner = elem;
+            while (umrechner < 0)
             {
-                new ArgumentOutOfRangeException($"Element muss positiv oder null sein! {elem} < 0!");
-                return -1;
+                umrechner += tabGroeße;
             }
-            else
-            {
-                int pos = elem % (tabGroeße);
-                return pos;
-            }
+            int pos = elem % tabGroeße;
+            return pos;
         }
 
         public (HashElement vorgänger, HashElement aktuelles) getHorizontalePos(int elem)   // Methode zum Bestimmen der "horzontalen" Position, also der Position in der verketteten Liste
@@ -220,6 +218,7 @@ namespace AuD_Praktikum
                 abbruch++;
                 i++;
             }
+            return false;
         }
 
         public override bool delete(int elem)     // Löschmethode
@@ -245,6 +244,7 @@ namespace AuD_Praktikum
                 abbruch++;
                 i++;
             }
+            return false;
         }
 
         public override void print()           // Ausgabefunktion
@@ -260,6 +260,7 @@ namespace AuD_Praktikum
                     Console.WriteLine(hashTab[i].element);
                 }
             }
+            Console.WriteLine();
         }
 
         public int getHorizontalePosPlus(int elem, int i)   // Methode für Hashfunktion mit quadratischer Sondierung, Teil mit Addition
@@ -269,9 +270,9 @@ namespace AuD_Praktikum
 
             while (umrechner < 0)
             {
-                umrechner = umrechner + (tabGroeße - 1);
+                umrechner = umrechner + tabGroeße;
             }
-            pos = (umrechner + (i * i)) % (tabGroeße - 1);
+            pos = (umrechner + (i * i)) % tabGroeße;
             return pos;
         }
 
@@ -282,9 +283,9 @@ namespace AuD_Praktikum
 
             while (umrechner < 0)
             {
-                umrechner = umrechner + (tabGroeße - 1);
+                umrechner = umrechner + tabGroeße;
             }
-            pos = (umrechner - (i * i)) % (tabGroeße - 1);
+            pos = (umrechner - (i * i)) % tabGroeße;
             return pos;
         }
     }
