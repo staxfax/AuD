@@ -261,6 +261,7 @@ namespace AuD_Praktikum
                 }
             }
             Console.WriteLine();
+            Console.WriteLine();
         }
 
         public int getHorizontalePosPlus(int elem, int i)   // Methode für Hashfunktion mit quadratischer Sondierung, Teil mit Addition
