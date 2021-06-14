@@ -17,12 +17,12 @@ namespace AuD_Praktikum
         {
             for (int i = 0; i < SIZE; i++)
             {
-                Console.WriteLine(myArray(i));
+                Console.WriteLine(myArray[i]);
             }
         }
     }
 
-    class SetSortedArray : MultiSetSortedArray, ISetsorted
+    class SetSortedArray : MultiSetSortedArray, ISetSorted
     {
         public override bool insert(int elem)
         {
@@ -50,7 +50,7 @@ namespace AuD_Praktikum
 
     class SetUnsortedArray : MultiSetUnsortedArray, ISetUnsorted
     {
-        public bool insert(int elem)
+        public override bool insert(int elem)
         {
 
             if (search(elem))
@@ -65,9 +65,9 @@ namespace AuD_Praktikum
 
     class MultiSetSortedArray : Array, IMultiSetSorted
     {
-        static int pos = -1;
+        protected static int pos = -1;
 
-        public bool insert(int elem)
+        public virtual bool insert(int elem)
         {
             int i = _search_(elem);
 
@@ -103,7 +103,7 @@ namespace AuD_Praktikum
                 return false;
         }
 
-        private int _search_(int elem)
+        protected int _search_(int elem)
         {
             int l = 0;
             int r = SIZE - 1;
@@ -125,7 +125,7 @@ namespace AuD_Praktikum
 
                 pos = i;
 
-            } while (myArray[i] != elem && l <= r)
+            } while (myArray[i] != elem && l <= r);
 
             if (myArray[i] == elem)
                 return i;
@@ -153,68 +153,68 @@ namespace AuD_Praktikum
 
         }
     }
-}
 
-class MultiSetUnsortedArray : Array, IMultiSetUnsorted
-{
-    public bool insert(int elem)
+
+    class MultiSetUnsortedArray : Array, IMultiSetUnsorted
     {
-        for (int i = 0; i < SIZE; i++)
+        public virtual bool insert(int elem)
         {
-            if (myArray[i] == null)
+            for (int i = 0; i < SIZE; i++)
             {
-                myArray[i] = elem;
-                return true;
+                if (myArray[i] == null)
+                {
+                    myArray[i] = elem;
+                    return true;
+                }
             }
+
+            return false;
         }
 
-        return false;
-    }
-
-    public bool search(int elem)
-    {
-
-        int i = _search_(elem);
-
-        if (i > -1)
-            return true;
-        else
-            return false;
-    }
-
-    private int _search_(int elem)
-    {
-        int i = 0;
-
-        while (myArray[i] != elem)
+        public bool search(int elem)
         {
-            i++;
 
-            if (i == SIZE)
-                return -1;
+            int i = _search_(elem);
+
+            if (i > -1)
+                return true;
+            else
+                return false;
         }
 
-        return i;
-    }
-
-    public bool delete(int elem)
-    {
-        int i = _search_(elem);
-
-        if (i == -1)
-            return false;
-
-
-        for (int j = 0; j < SIZE; j++)
+        private int _search_(int elem)
         {
-            if (myArray[j] == null)
+            int i = 0;
+
+            while (myArray[i] != elem)
             {
-                myArray[i] = myArray[j--];
-                return true;
+                i++;
+
+                if (i == SIZE)
+                    return -1;
             }
+
+            return i;
         }
 
-        return false;
+        public bool delete(int elem)
+        {
+            int i = _search_(elem);
+
+            if (i == -1)
+                return false;
+
+
+            for (int j = 0; j < SIZE; j++)
+            {
+                if (myArray[j] == null)
+                {
+                    myArray[i] = myArray[j--];
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
-}
 }
