@@ -109,30 +109,50 @@ namespace AuD_Praktikum
         }
 
         /// <summary>
-        /// offizielle Löschfunktion, enthält searchNode
+        /// offizielle Löschfunktion, ruft delete_ auf
         /// </summary>
         /// <param name="elem">zu löschendes Element</param>
         /// <returns>true, wenn Element gelöscht wurde</returns>
         public virtual bool delete(int elem)
         {
-            BinTreeNode a = searchNode(elem);
-            BinTreeNode b;      
-            if (a == null)
+            BinTreeNode node = delete_(elem);
+            if (node == null)
                 return false;
+            else
+                return true;
+        }
+
+        /// <summary>
+        /// Hilfslöschfunktion, enthält searchNode 
+        /// </summary>
+        /// <param name="node">zu löschender Knoten</param>
+        /// <returns>gelöschter Knoten oder null, wenn Element nicht vorhanden</returns>
+        protected BinTreeNode delete_(int elem)
+        {
+            BinTreeNode a = searchNode(elem);
+            BinTreeNode b;
+            BinTreeNode bPrev = null;
+            if (a == null)
+                return null;
             if (a.right != null && a.left != null)
             {
                 BinTreeNode c;
                 b = a;
                 if (b.left.right != null)
                 {
+                    bPrev = b;
                     b = b.left;
                     while (b.right.right != null)
+                    {
+                        bPrev = b; //also Vorgänger von der Stelle von der das Element genommen wird
                         b = b.right;
+                    }
                 }
                 if (b == a)
                 {
                     c = b.left;
                     b.left = c.left;
+                    bPrev = c; //also Stelle von der das Element genommen wird
                 }
                 else
                 {
@@ -140,7 +160,7 @@ namespace AuD_Praktikum
                     b.right = c.left;
                 }
                 a.zahl = c.zahl;
-                return true;
+                return bPrev;
             }
             if (a.left == null)
                 b = a.right;
@@ -149,14 +169,13 @@ namespace AuD_Praktikum
             if (root == a)
             {
                 root = b;
-                return true;
+                return root;
             }
             if (dir == "left")
                 pred.left = b;
             else
                 pred.right = b;
-            return true;
-
+            return pred;
         }
 
         /// <summary>
