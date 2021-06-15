@@ -34,7 +34,7 @@ namespace AuD_Praktikum
         public bool search(int elem)
         {
             BinTreeNode a = searchNode(elem);
-            if (a != null)
+            if (a != null) //a gefunden
                 return true;
             else
                 return false;
@@ -49,26 +49,26 @@ namespace AuD_Praktikum
         protected BinTreeNode searchNode(int elem)
         {
             BinTreeNode a = root;
-            if (a == null || a.zahl == elem)
+            if (a == null || a.zahl == elem) //Baum leer oder Wurzel ist gesuchtes Element
             {
                 dir = "root";
                 pred = null;
             }
-            while (a != null)
+            while (a != null) //Baum noch nicht fertig durchlaufen
             {
-                if (elem < a.zahl)
+                if (elem < a.zahl) //gesuchtes Element gehört in den linken Teilbaum
                 {
                     pred = a;
                     dir = "left";
                     a = a.left;
                 }
-                else if (elem > a.zahl)
+                else if (elem > a.zahl) //gesuchtes Element gehört in den rechten Teilbaum
                 {
                     pred = a;
                     dir = "right";
                     a = a.right;
                 }
-                else
+                else //gesuchtes Element gefunden, in a gespeichert
                     break;
             }
             return a;
@@ -82,7 +82,7 @@ namespace AuD_Praktikum
         public virtual bool insert(int elem)
         {
             BinTreeNode a = insert_(elem);
-            if (a == null)
+            if (a == null) //Element war schon enthalten
                 return false;
             else
                 return true;
@@ -96,16 +96,16 @@ namespace AuD_Praktikum
         protected BinTreeNode insert_(int elem)
         {
             BinTreeNode a = searchNode(elem);
-            if (a != null)
+            if (a != null) //Element schon im Baum enthalten --> wird nicht nochmal eingefügt
                 return null;
-            a = insertNode(elem);
-            if (dir == "root")
+            a = insertNode(elem); //Funktion eines Konstruktors
+            if (dir == "root") //Baum leer --> neues Element wird Wurzel
                 root = a;
-            else if (dir == "left")
+            else if (dir == "left") //neues Element ist linker Nachfolger
                 pred.left = a;
-            else
+            else //neues Element ist rechter Nachfolger
                 pred.right = a;
-            return a;
+            return a; //eingefügtes Element
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace AuD_Praktikum
         public virtual bool delete(int elem)
         {
             BinTreeNode node = delete_(elem);
-            if (node == null)
+            if (node == null) //Element war nicht enthalten
                 return false;
             else
                 return true;
@@ -132,13 +132,13 @@ namespace AuD_Praktikum
             BinTreeNode a = searchNode(elem);
             BinTreeNode b;
             BinTreeNode bPrev = null;
-            if (a == null)
+            if (a == null) //Element nicht im Baum enthalten
                 return null;
-            if (a.right != null && a.left != null)
+            if (a.right != null && a.left != null) //a hat zwei Nachfolger
             {
                 BinTreeNode c;
                 b = a;
-                if (b.left.right != null)
+                if (b.left.right != null) //suche symmetrischen Vorgänger
                 {
                     bPrev = b;
                     b = b.left;
@@ -148,7 +148,7 @@ namespace AuD_Praktikum
                         b = b.right;
                     }
                 }
-                if (b == a)
+                if (b == a) //symmetrischer Vorgänger ist linker Nachfolger
                 {
                     c = b.left;
                     b.left = c.left;
@@ -159,21 +159,23 @@ namespace AuD_Praktikum
                     c = b.right;
                     b.right = c.left;
                 }
-                a.zahl = c.zahl;
+                a.zahl = c.zahl; //setze Wert des symmetrischen Vorgängers an zu löschende Stelle. 
                 return bPrev;
             }
+            //a hat höchstens einen Nachfolger
+            //b speichert den einzigen Nachfolger oder null
             if (a.left == null)
                 b = a.right;
             else
                 b = a.left;
-            if (root == a)
+            if (root == a) //a ist Wurzel
             {
                 root = b;
                 return root;
             }
-            if (dir == "left")
+            if (dir == "left") //a ist linker Nachfolger eines Knotens
                 pred.left = b;
-            else
+            else //a ist rechter Nachfolger eines Knotens
                 pred.right = b;
             return pred;
         }
@@ -183,6 +185,7 @@ namespace AuD_Praktikum
         /// </summary>
         public void print()
         {
+            //Baum wird um 90° gedreh und ausgegeben
             treePrint(root, 0);
             Console.WriteLine();
         }
@@ -209,9 +212,9 @@ namespace AuD_Praktikum
         {
             if (a != null)
             {
-                treePrint(a.right, level + 1);
+                treePrint(a.right, level + 1); //rufe treePrint für rechten Nachfolger mit höherem Level auf
                 indentPrint(a, level);
-                treePrint(a.left, level + 1);
+                treePrint(a.left, level + 1); //rufe treePrint für linken Nachfolger mit höherem Level auf
             }
         }
 
@@ -222,6 +225,7 @@ namespace AuD_Praktikum
         /// <param name="level">Höhe im Baum</param>
         protected void indentPrint(BinTreeNode a, int level)
         {
+            //rückt den übergebenen Knoten ein, je nachdem, wie hoch das level des Baums ist.
             if (level == 0)
                 Console.WriteLine(a);
             else if (level == 1)
