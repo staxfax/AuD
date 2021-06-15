@@ -41,13 +41,6 @@ namespace AuD_Praktikum
             choiceAsCK = Console.ReadKey();
             if (char.IsDigit(choiceAsCK.KeyChar))
                 concreteChoice = int.Parse(choiceAsCK.KeyChar.ToString());
-            if (abstractChoice == 4 && (concreteChoice == 3 || concreteChoice == 4))
-                concreteChoice = concreteChoice + 2;
-
-            string typeName = "AuD_Praktikum."; //muss an projektmappennamen angepasst werden!
-            if (concreteChoice < 3)
-                typeName += (abstractChoiceName)abstractChoice;
-            typeName += (concreteChoiceName)concreteChoice;
 
             if (concreteChoice > concreteChoiceMax)
             {
@@ -55,8 +48,17 @@ namespace AuD_Praktikum
                 return;
             }
 
+            if (abstractChoice == 4 && (concreteChoice == 3 || concreteChoice == 4))
+                concreteChoice = concreteChoice + 3;
+
+            string typeName = "AuD_Praktikum."; 
+            if (concreteChoice < 3)
+                typeName += (abstractChoiceName)abstractChoice;
+            typeName += (concreteChoiceName)concreteChoice;
+
+
             var typeNameVar = Type.GetType(typeName);
-            var item = Activator.CreateInstance(typeNameVar) as IDictionary; //wird error ausgeben so lange die anderen klassen noch nicht implementiert sind
+            var item = Activator.CreateInstance(typeNameVar) as IDictionary; 
 
 
             bool againInnerLoop = true;
