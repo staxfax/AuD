@@ -11,11 +11,11 @@ namespace AuD_Praktikum
         {
             hashTab = new HashElement[tabGroeße];
         }
-        public Hash(int gewuenschteGroeße) // Konstruktor 2, falls TabGröße gewünscht
+        /*public Hash(int gewuenschteGroeße) // Konstruktor 2, falls TabGröße gewünscht
         {
             tabGroeße = gewuenschteGroeße;
             hashTab = new HashElement[tabGroeße];
-        }
+        }*/
         public abstract bool search(int elem);   // abstrakte Methoden aus ISetUnsorted bzw IDictionary
         public abstract bool insert(int elem);
         public abstract bool delete(int elem);
@@ -37,7 +37,7 @@ namespace AuD_Praktikum
     class HashTabSepChain : Hash        // Klasse für separate Verkettung
     {
         public HashTabSepChain() : base() { }                        // Konstruktoren aus class Hash
-        public HashTabSepChain(int tabGroeße) : base(tabGroeße) { }
+        //public HashTabSepChain(int tabGroeße) : base(tabGroeße) { }
 
         public override bool insert(int elem)                // Einfügemethode
         {
@@ -47,7 +47,6 @@ namespace AuD_Praktikum
             if (eingefügeStelle == null)
             {
                 hashTab[pos] = einzufügen;
-                Console.WriteLine($"{elem} wurde eingefügt!");
                 return true;
             }
             else
@@ -57,7 +56,6 @@ namespace AuD_Praktikum
                     eingefügeStelle = eingefügeStelle.nachfolger;
                 }
                 eingefügeStelle.nachfolger = einzufügen;
-                Console.WriteLine($"{elem} wurde eingefügt!");
                 return true;
             }
         }
@@ -68,13 +66,10 @@ namespace AuD_Praktikum
 
             if (aktuelles == null)
             {
-                Console.WriteLine($"{elem} wurde nicht gefunden!");
                 return false;
-                //new ArgumentOutOfRangeException($"Das Element {elem} wurde nicht gefunden!")
             }
             else
             {
-                Console.WriteLine($"{elem} wurde gefunden!");
                 return true;
             }
         }
@@ -90,12 +85,10 @@ namespace AuD_Praktikum
             }
             if (vorgänger == null)
             {
-                hashTab[pos] = null;
-                Console.WriteLine($"{elem} wurde gelöscht!");
+                hashTab[pos] = aktuelles.nachfolger;
                 return true;
             }
             vorgänger.nachfolger = aktuelles.nachfolger;
-            Console.WriteLine($"{elem} wurde gelöscht!");
             return true;
         }
 
@@ -130,7 +123,7 @@ namespace AuD_Praktikum
             {
                 umrechner += tabGroeße;
             }
-            int pos = elem % tabGroeße;
+            int pos = umrechner % tabGroeße;
             return pos;
         }
 
@@ -160,7 +153,7 @@ namespace AuD_Praktikum
     class HashTabQuadProb : Hash      // Klasse für quadratische Sondierung
     {
         public HashTabQuadProb() : base() { }                     // Konstruktoren aus class Hash
-        public HashTabQuadProb(int tabGroeße) : base(tabGroeße) { }
+        //public HashTabQuadProb(int tabGroeße) : base(tabGroeße) { }
 
         public override bool insert(int elem)         // Einfügemethode
         {
@@ -168,13 +161,13 @@ namespace AuD_Praktikum
             int i = 0;
             int pos;
             int abbruch = -1;
-            while (abbruch <= tabGroeße)
+            while (abbruch < tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
                 if (hashTab[pos] == null)
                 {
                     hashTab[pos] = einzufügen;
-                    Console.WriteLine($"{elem} wurde eingefügt!");
+                    //Console.WriteLine($"{elem} wurde eingefügt!");
                     return true;
                 }
                 abbruch++;
@@ -183,7 +176,7 @@ namespace AuD_Praktikum
                 if (hashTab[pos] == null)
                 {
                     hashTab[pos] = einzufügen;
-                    Console.WriteLine($"{elem} wurde eingefügt!");
+                    //Console.WriteLine($"{elem} wurde eingefügt!");
                     return true;
                 }
                 abbruch++;
@@ -200,20 +193,24 @@ namespace AuD_Praktikum
             int i = 0;
             int pos;
             int abbruch = -1;
-            while (abbruch <= tabGroeße)
+            while (abbruch < tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
-                if (hashTab[pos].element == elem)
+                if (hashTab[pos] != null)
                 {
-                    Console.WriteLine($"{elem} wurde gefunden!");
-                    return true;
+                    if (hashTab[pos].element == elem)
+                    {
+                        return true;
+                    }
                 }
                 abbruch++;
                 pos = getHorizontalePosMinus(elem, i);
-                if (hashTab[pos].element == elem)
+                if (hashTab[pos] != null)
                 {
-                    Console.WriteLine($"{elem} wurde gefunden!");
-                    return true;
+                    if (hashTab[pos].element == elem)
+                    {
+                        return true;
+                    }
                 }
                 abbruch++;
                 i++;
@@ -226,24 +223,31 @@ namespace AuD_Praktikum
             int i = 0;
             int pos;
             int abbruch = -1;
-            while (abbruch <= tabGroeße)
+            while (abbruch < tabGroeße)
             {
                 pos = getHorizontalePosPlus(elem, i);
-                if (hashTab[pos].element == elem)
+                if (hashTab[pos] != null)
                 {
-                    hashTab[pos] = null;
-                    return true;
+                    if (hashTab[pos].element == elem)
+                    {
+                        hashTab[pos] = null;
+                        return true;
+                    }
                 }
                 abbruch++;
                 pos = getHorizontalePosMinus(elem, i);
-                if (hashTab[pos].element == elem)
+                if (hashTab[pos] != null)
                 {
-                    hashTab[pos] = null;
-                    return true;
+                    if (hashTab[pos].element == elem)
+                    {
+                        hashTab[pos] = null;
+                        return true;
+                    }
                 }
                 abbruch++;
                 i++;
             }
+            Console.WriteLine($"{elem} existiert nicht!");
             return false;
         }
 
@@ -286,6 +290,7 @@ namespace AuD_Praktikum
             {
                 umrechner = umrechner + tabGroeße;
             }
+            umrechner += (tabGroeße-1)*tabGroeße/2;                    // Nicht schön, aber funktioniert! Für alle Tabellengrößen in Form m=4*k+3
             pos = (umrechner - (i * i)) % tabGroeße;
             return pos;
         }
