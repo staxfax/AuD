@@ -19,7 +19,29 @@ namespace AuD_Praktikum
         public abstract bool search(int elem);   // abstrakte Methoden aus ISetUnsorted bzw IDictionary
         public abstract bool insert(int elem);
         public abstract bool delete(int elem);
-        public abstract void print();
+        public void print()
+        {
+            HashElement laufvariable;
+            for (int i = 0; i < tabGroeße; i++)
+            {
+                if (hashTab[i] == null)
+                {
+                    Console.WriteLine("/");
+                }
+                else
+                {
+                    Console.Write($"{hashTab[i].element} ");
+                    laufvariable = hashTab[i];
+                    while (laufvariable.nachfolger != null)
+                    {
+                        Console.Write($"-> {laufvariable.nachfolger.element} ");
+                        laufvariable = laufvariable.nachfolger;
+                    }
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine();
+        }
     }
 
     class HashElement                    // Klasse für Hashelemente, v.a. für Verkettung wichtig -> einfache Liste
@@ -41,6 +63,11 @@ namespace AuD_Praktikum
 
         public override bool insert(int elem)                // Einfügemethode
         {
+            if (search(elem) == true)
+            {
+                Console.WriteLine($"{elem} existiert bereits!");
+                return false;
+            }
             HashElement einzufügen = new HashElement(elem);
             int pos = getVertikalePos(elem);
             HashElement eingefügeStelle = hashTab[pos];
@@ -92,30 +119,6 @@ namespace AuD_Praktikum
             return true;
         }
 
-        public override void print()                 //Darstellmethode
-        {
-            HashElement laufvariable;
-            for (int i = 0; i < tabGroeße; i++)
-            {
-                if (hashTab[i] == null)
-                {
-                    Console.WriteLine("/");
-                }
-                else
-                {
-                    Console.Write($"{hashTab[i].element} ");
-                    laufvariable = hashTab[i];
-                    while (laufvariable.nachfolger != null)
-                    {
-                        Console.Write($"-> {laufvariable.nachfolger.element} ");
-                        laufvariable = laufvariable.nachfolger;
-                    }
-                    Console.WriteLine();
-                }
-            }
-            Console.WriteLine();
-        }
-
         public int getVertikalePos(int elem)      // Methode zum bestimmen der "vertikalen" Position, also der Position in der Hash Tabelle
         {
             int umrechner = elem;
@@ -157,6 +160,11 @@ namespace AuD_Praktikum
 
         public override bool insert(int elem)         // Einfügemethode
         {
+            if (search(elem) == true)
+            {
+                Console.WriteLine($"{elem} existiert bereits!");
+                return false;
+            }
             HashElement einzufügen = new HashElement(elem);
             int i = 0;
             int pos;
@@ -249,23 +257,6 @@ namespace AuD_Praktikum
             }
             Console.WriteLine($"{elem} existiert nicht!");
             return false;
-        }
-
-        public override void print()           // Ausgabefunktion
-        {
-            for (int i = 0; i < tabGroeße; i++)
-            {
-                if (hashTab[i] == null)
-                {
-                    Console.WriteLine("/");
-                }
-                else
-                {
-                    Console.WriteLine(hashTab[i].element);
-                }
-            }
-            Console.WriteLine();
-            Console.WriteLine();
         }
 
         public int getHorizontalePosPlus(int elem, int i)   // Methode für Hashfunktion mit quadratischer Sondierung, Teil mit Addition
