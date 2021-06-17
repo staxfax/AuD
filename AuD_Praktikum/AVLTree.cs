@@ -66,6 +66,14 @@ namespace AuD_Praktikum
             AVLTreeNode temp = (AVLTreeNode)binNode;
             if (temp != null)
             {
+                if (temp == root)
+                    temp.parent = null;
+
+                if (temp.left != null)
+                    ((AVLTreeNode)temp.left).parent = temp;
+                if (temp.right != null)
+                    ((AVLTreeNode)temp.right).parent = temp;
+
                 temp.height = getHeight(temp);
                 temp.balance = getBalance(temp);
                 organiseTree(temp);

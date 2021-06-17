@@ -131,7 +131,6 @@ namespace AuD_Praktikum
         {
             BinTreeNode a = searchNode(elem);
             BinTreeNode b;
-            BinTreeNode bPrev = null;
             if (a == null) //Element nicht im Baum enthalten
                 return null;
             if (a.right != null && a.left != null) //a hat zwei Nachfolger
@@ -140,11 +139,9 @@ namespace AuD_Praktikum
                 b = a;
                 if (b.left.right != null) //suche symmetrischen Vorgänger
                 {
-                    bPrev = b;
                     b = b.left;
                     while (b.right.right != null)
                     {
-                        bPrev = b; //also Vorgänger von der Stelle von der das Element genommen wird
                         b = b.right;
                     }
                 }
@@ -152,7 +149,6 @@ namespace AuD_Praktikum
                 {
                     c = b.left;
                     b.left = c.left;
-                    bPrev = c; //also Stelle von der das Element genommen wird
                 }
                 else
                 {
@@ -160,7 +156,7 @@ namespace AuD_Praktikum
                     b.right = c.left;
                 }
                 a.zahl = c.zahl; //setze Wert des symmetrischen Vorgängers an zu löschende Stelle. 
-                return bPrev;
+                return b;
             }
             //a hat höchstens einen Nachfolger
             //b speichert den einzigen Nachfolger oder null
