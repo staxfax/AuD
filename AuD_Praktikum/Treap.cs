@@ -29,22 +29,6 @@ namespace AuD_Praktikum
             // für die Priorität
             random = new Random();
 
-            //test
-            //root = new TreapNode(28) { zahl = 30 };
-            ////test delete 9,30
-            //root = new TreapNode(5) { zahl = 7 };
-            //root.left = new TreapNode(22) { zahl = 5, parent = root as TreapNode };
-            //root.left.left = new TreapNode(33) { zahl = 2, parent = root.left as TreapNode };
-
-            //root.right = new TreapNode(30) { zahl = 9, parent = root as TreapNode };
-            //root.right.left = new TreapNode(46) { zahl = 8, parent = root.right as TreapNode };
-            //root.right.right = new TreapNode(30) { zahl = 17, parent = root.right as TreapNode };
-
-            //root.right.right.left = new TreapNode(41) { zahl = 16, parent = root.right.right as TreapNode };
-            //root.right.right.right = new TreapNode(40) { zahl = 30, parent = root.right.right as TreapNode };
-
-            //root.right.right.left.left = new TreapNode(41) { zahl = 12, parent = root.right.right.left as TreapNode };
-            //root.right.right.left.left.right = new TreapNode(44) { zahl = 15, parent = root.right.right.left.left as TreapNode };
         }
 
         /// <summary>
@@ -90,7 +74,6 @@ namespace AuD_Praktikum
                         }
                     }
                     // Nach Priorität sortieren
-                    //RotationHeap(a);
                     if (a == parent.left)
                         RRot(a);
                     else
@@ -100,6 +83,7 @@ namespace AuD_Praktikum
                     // Parent ersetzen
                     parent.parent = a;
 
+                    // wenn Element die neue Wurzel
                     if (a.parent == null)
                     {
                         root = a;
@@ -110,66 +94,7 @@ namespace AuD_Praktikum
             return false;
         }
 
-        /// <summary>
-        /// Macht eine Rotation nach Prinzip von Min-Heap
-        /// </summary>
-        /// <param name="n">Blatt eines Baumes</param>
-        //private void RotationHeap(TreapNode n)
-        //{
-        //    // checken ob n ein Blatt
-        //    if (n.left == null && n.right == null)
-        //    {
-        //        // Schleife solange parent vorhanden und priotity kleiner priority partent
-        //        while (n.parent != null && n.priority < n.parent.priority)
-        //        {
-        //            // Parent und Grandparent initialisieren
-        //            TreapNode parent = n.parent;
-        //            TreapNode grandParent = n.parent.parent;
-        //            // checken, ob Grandparent vorhanden
-        //            if (grandParent != null)
-        //            {
-        //                // Wenn Konten Parent von n links steht
-        //                if (grandParent.left == n.parent)
-        //                {
-        //                    grandParent.left = n;
-        //                }
-        //                // rechts
-        //                else
-        //                {
-        //                    grandParent.right = n;
-        //                }
-        //            }
-        //            n.parent = grandParent;
-
-        //            TreapNode right = (TreapNode)n.right; // behalte n->right
-        //            TreapNode left = (TreapNode)n.left; // behalte n->left
-
-        //            // Position für Parent finden
-        //            if (n == parent.left)
-        //            {
-        //                // n ist links
-        //                parent.left = right;
-        //                if (right != null)
-        //                    right.parent = parent;
-        //                n.right = parent;
-        //            }
-        //            else
-        //            {
-        //                //n ist rechts
-        //                parent.right = left;
-        //                if (left != null)
-        //                    left.parent = parent;
-        //                n.left = parent;
-        //            }
-        //            // Parent ersetzen
-        //            parent.parent = n;
-        //        }
-        //        if (n.parent == null)
-        //            root = n;
-        //    }
-        //}
-
-        // Element wird wir nach rechts oben rotiert, Element steht links
+        // Rechtsrotation, Element wird rechts nach oben rotiert
         private TreapNode RRot(TreapNode n)
         {
             // Parent und Grandparent initialisieren
@@ -185,6 +110,7 @@ namespace AuD_Praktikum
             return n;
         }
 
+        // Linksrotation, Element wird links nach oben rotiert
         private TreapNode LRot(TreapNode n)
         {
             // Parent initialisieren
@@ -199,74 +125,6 @@ namespace AuD_Praktikum
 
             return n;
         }
-            /// <summary>
-            /// Funktion um Element löschen zu können, Zahlen "durchsickern" bis Blatt
-            /// </summary>
-            /// <param name="n"></param>
-        //    private void DownHeap(TreapNode n)
-        //{
-        //    TreapNode left = n.left as TreapNode;
-        //    TreapNode right = n.right as TreapNode;
-        //    // Richtung wählen
-        //    // Wenn linke Seite nicht null und rechte Seite gleich null -> dann nach links
-        //    // Wenn linke Seite nicht null und rechte auch nicht und die Priorität links kleiner als rechts -> dann nach links
-        //    bool direction = left != null && (right == null || (right != null && left.priority < right.priority));
-        //    while (!(n.left == null && n.right == null)) // (n.left != null || n.right != null)
-        //    {
-        //        TreapNode next;
-        //        // Wenn direction = true, dann links
-        //        if (direction)
-        //        {
-        //            // links von n speichern
-        //            next = n.left as TreapNode;
-        //            if (next != null)
-        //            {
-        //                n.left = next.right;
-        //                // tausche die Verbindungen nach rechts
-        //                next.right = n;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // rechts von n speichern
-        //            next = n.right as TreapNode;
-        //            if (next != null)
-        //            {
-        //                n.right = next.left;
-        //                // tausche die Verbindungen nach links
-        //                next.left = n;
-        //            }
-        //        }
-
-        //        //Vorgänger zeigt auf Nachfolger
-        //        if (n.parent != null)
-        //        {
-        //            if (n.parent.left == n)
-        //            {
-        //                // Parent zeigt auf nächstes Element
-        //                n.parent.left = next;
-        //            }
-        //            else
-        //            {
-        //                n.parent.right = next;
-        //            }
-        //        }
-
-        //        TreapNode grandParent = n.parent;
-        //        n.parent = next;
-        //        if (next != null)
-        //        {
-        //            next.parent = grandParent;
-        //            if (next.parent == null)
-        //            {
-        //                root = next;
-        //            }
-        //        }
-        //        // Solange bis es keinen n.right mehr gibt
-        //        direction = n.right == null;
-        //    }
-        //}
-
 
         public override bool delete(int elem)
         {
