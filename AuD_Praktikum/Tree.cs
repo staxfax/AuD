@@ -182,7 +182,7 @@ namespace AuD_Praktikum
         public void print()
         {
             //Baum wird um 90° gedreh und ausgegeben
-            treePrint(root, 0);
+            treePrint(root, 0, "null");
             Console.WriteLine();
         }
 
@@ -204,13 +204,13 @@ namespace AuD_Praktikum
         /// </summary>
         /// <param name="a">aktueller Knoten</param>
         /// <param name="level">Höhe im Baum (0: Wurzel)</param>
-        protected void treePrint(BinTreeNode a, int level)
+        protected void treePrint(BinTreeNode a, int level, string direction)
         {
             if (a != null)
             {
-                treePrint(a.right, level + 1); //rufe treePrint für rechten Nachfolger mit höherem Level auf
-                indentPrint(a, level);
-                treePrint(a.left, level + 1); //rufe treePrint für linken Nachfolger mit höherem Level auf
+                treePrint(a.right, level + 1, "right"); //rufe treePrint für rechten Nachfolger mit höherem Level auf
+                indentPrint(a, level, direction);
+                treePrint(a.left, level + 1, "left"); //rufe treePrint für linken Nachfolger mit höherem Level auf
             }
         }
 
@@ -219,20 +219,26 @@ namespace AuD_Praktikum
         /// </summary>
         /// <param name="a">Baumknoten</param>
         /// <param name="level">Höhe im Baum</param>
-        protected void indentPrint(BinTreeNode a, int level)
+        protected void indentPrint(BinTreeNode a, int level, string direction)
         {
             //rückt den übergebenen Knoten ein, je nachdem, wie hoch das level des Baums ist.
-            if (level == 0)
+            if (level == 0) //Knoten ist Wurzel
                 Console.WriteLine(a);
             else if (level == 1)
-                Console.WriteLine("    -- " + a);
+                if (direction == "right")
+                    Console.WriteLine("    /-- " + a);
+                else
+                    Console.WriteLine("    \\-- " + a);
             else
             {
                 for (int i = 0; i < level - 1; i++)
                 {
                     Console.Write("       ");
                 }
-                Console.WriteLine("    -- " + a);
+                if (direction == "right")
+                    Console.WriteLine("    /-- " + a);
+                else
+                    Console.WriteLine("    \\-- " + a);
             }
         }
     }
