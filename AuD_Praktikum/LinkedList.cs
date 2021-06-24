@@ -16,7 +16,6 @@ namespace AuD_Praktikum
 
         protected int count; // Anzahl der Elemente in der Liste
 
-        // print bei einfach und doppelt verkettet ohnehin gleich
         public void print()
         {
             Console.WriteLine($"Anzahl der Elemente: {count}");
@@ -40,12 +39,12 @@ namespace AuD_Praktikum
             else // Das gesuchte Element befindet sich mittendrin ODER am Ende
             {
                 LElem tmp = first;
-                while (tmp.elem.CompareTo(elem) != 0) // 0: tmp.elem = elem -> Suche gibt Position des jeweils vordersten elem zurück, vor dem dann eingefügt wird
+                while (tmp.elem.CompareTo(elem) != 0) // Suche gibt Position des jeweils vordersten elem zurück
                 {
-                    if (tmp.next != null) // Position vor dem gesuchten Element wird zwischengespeichert (nötig für delete)
-                        if (tmp.next.elem.CompareTo(elem) == 0)
+                    if (tmp.next != null)
+                        if (tmp.next.elem.CompareTo(elem) == 0) // Position vor dem gesuchten Element wird zwischengespeichert (nötig für delete)
                             prevposition = tmp;
-                    if (tmp.elem.CompareTo(elem) <= 0) // Falls elem nicht vorhanden, wird zusätzlich Stelle des größten kleineren elem gespeichert (nötig für Sorted insert)
+                    if (tmp.elem.CompareTo(elem) <= 0) // Falls Element nicht vorhanden, wird zusätzlich Stelle des größten kleineren Element gespeichert (nötig für Sorted insert)
                         position = tmp;
                     if (tmp.next == null)
                         break;
@@ -104,26 +103,31 @@ namespace AuD_Praktikum
             else { return false; }
         }
 
-        // Einfügen, wird Listen spezifisch implementiert, da nicht bei allen gleich
-        public abstract bool insert(int elem);
+        // Einfügen
+        public abstract bool insert(int elem); // Wird Datentyp spezifisch implementiert, da nicht bei allen gleich
 
 
     }
 
-    // Insgesamt vier Klassen für verkettete Listen
+    // Insgesamt vier geforderte Klassen für verkettete Listen
 
     class MultiSetSortedLinkedList : LinkedList
     {
         public override bool insert(int elem)
         {
-            LElem nelem = new LElem(elem);
             search(elem);
+            _insert_(elem);
+            return true;
+        }
+
+        protected void _insert_(int elem) // Ausgelagerte Hilfsfunktion, um redundanten Suchaufruf in erbender Klasse zu vermeiden
+        {
+            LElem nelem = new LElem(elem);
 
             if (first == null) // Liste leer
             {
                 first = last = nelem;
                 count++;
-                return true;
             }
             else if (first == last) // Liste hat nur ein Element
             {
@@ -132,36 +136,31 @@ namespace AuD_Praktikum
                     last.next = nelem;
                     last = last.next;
                     count++;
-                    return true;
                 }
                 else // (elem <= last.elem) Add Front
                 {
                     nelem.next = first;
                     first = nelem;
                     count++;
-                    return true;
                 }
             }
-            else if (elem < first.elem) // Fügt vor aktuellem first einfügen
+            else if (elem < first.elem) // Am Anfang einfügen
             {
                 nelem.next = first;
                 first = nelem;
                 count++;
-                return true;
             }
-            else if (position != last) // Mittendrin einfügen - Add After position
+            else if (position != last) // Mittendrin einfügen
             {
                 nelem.next = position.next;
                 position.next = nelem;
                 count++;
-                return true;
             }
             else // Am Ende einfügen
             {
                 last.next = nelem;
                 last = last.next;
                 count++;
-                return true;
             }
         }
     }
@@ -177,7 +176,7 @@ namespace AuD_Praktikum
                 count++;
                 return true;
             }
-            else // Liste nicht leer -> AddEnd
+            else // Liste nicht leer, am Ende einfügen
             {
                 last.next = nelem;
                 last = last.next;
@@ -194,7 +193,7 @@ namespace AuD_Praktikum
         {
             if (search(elem) == false) // Element noch nicht vorhanden
             {
-                base.insert(elem);
+                _insert_(elem);
                 return true;
             }
             else // Element bereits vorhanden
